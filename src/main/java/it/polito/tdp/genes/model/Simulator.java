@@ -18,7 +18,7 @@ public class Simulator {
 	private Genes gene;
 	
 	// dati in uscita
-	// valore finale di 'geniInCorsoDiStudio'
+	List<Studio> risultato;
 	
 	// modello del mondo
 	List<Studio> ricerca;
@@ -26,15 +26,18 @@ public class Simulator {
 	// coda degli eventi
 	private Queue<Event> queue;
 	
-	public Simulator() {
+	public Simulator(Graph<Genes, DefaultWeightedEdge> grafo) {
 		// inizializzo il grafo
-		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		this.grafo = grafo;
 	}
 	
 	public void init(int n, Genes gene) {
 		// inizializzo i dati in ingresso
 		this.n = n;
 		this.gene = gene;
+		
+		// inizializzo i dati in uscita
+		this.risultato = new ArrayList<>();
 			
 		// inizializzo il modello del mondo
 		this.ricerca = new ArrayList<>();
@@ -78,7 +81,15 @@ public class Simulator {
 			this.queue.add(new Event(e.getTime()+1, prossimoGene));
 			
 			// aggiorno il modello del mondo
-			if(!prossimoGene.equals(genePrecedente)) {
+			boolean trovato = false;
+			for(Studio s : this.ricerca) {
+				if(s.getGene().equals(prossimoGene)) {
+					// esiste già il gene
+					trovato = true;
+					break;
+				}
+			}
+			if(!trovato) {
 				this.ricerca.add(new Studio(prossimoGene, 0));
 			}
 			
@@ -109,23 +120,29 @@ public class Simulator {
 			Genes adiacente = Graphs.getOppositeVertex(this.grafo, e, gene);
 			adiacenti.add(new Vicino(adiacente, peso));
 		}
-		Collections.sort(adiacenti);
+//		Collections.sort(adiacenti);
 		double caso = Math.random();
 		for(Vicino v : adiacenti) {
 			sommaPesi += v.getPeso();
 		} 
 		double prob = 0.0;
 		for(Vicino v : adiacenti) {
-			if(caso >= prob && caso < v.getPeso()/sommaPesi) {
+			prob += v.getPeso()/sommaPesi;
+			if(caso < prob) {
 				scelto = v.getG();
+				break;
 			}
-			prob = v.getPeso()/sommaPesi;
 		}
 		
 		return scelto;
 	}
 	
-	public List<Studio> getRicerca() {
-		return this.ricerca;
+	public List<Studio> getRisultato() {
+		for(Studio s : this.ricerca) {
+			if(s.getnIngegneri() != 0) {
+				this.risultato.add(s);
+			}
+		}
+		return this.risultato;
 	}
 }

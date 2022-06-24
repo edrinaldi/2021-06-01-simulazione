@@ -23,7 +23,6 @@ public class Model {
 		this.dao = new GenesDao();
 		this.idMap = new HashMap<>();
 		this.dao.getAllGenes(this.idMap);
-		this.sim = new Simulator();
 	}
 	
 	public void creaGrafo() {
@@ -80,12 +79,12 @@ public class Model {
 		return this.grafo!=null;
 	}
 	
-	public void simula(int n, Genes gene) {
+	public List<Studio> simula(int n, Genes gene) {
+		this.sim = new Simulator(this.grafo);
+
 		this.sim.init(n, gene);
 		this.sim.run();
+		return this.sim.getRisultato();
 	}
 	
-	public List<Studio> getRicerca() {
-		
-	}
 }

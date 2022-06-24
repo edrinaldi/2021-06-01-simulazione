@@ -20,4 +20,8 @@ public class Studio {
 	public void decrementaIngegneri() {
 		this.nIngegneri--;
 	}
+	@Override
+	public String toString() {
+		return "gene: " + gene + ", " + nIngegneri + " ingegneri";
+	}
 }

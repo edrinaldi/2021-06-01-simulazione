@@ -1,0 +1,7 @@
+- prob = 0
+- per ogni peso associato a g
+	- prob += peso/somma
+	- if(caso < prob)
+		- scelto = g
+		- break
+		

@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Genes;
 import it.polito.tdp.genes.model.Model;
+import it.polito.tdp.genes.model.Studio;
 import it.polito.tdp.genes.model.Vicino;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -92,7 +93,42 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	// pulisco l'area di testo
+    	this.txtResult.clear();
+    	
+    	// controllo il grafo
+    	if(!this.model.isGrafoCreato()) {
+    		this.txtResult.setText("Errore: devi prima creare il grafo.");
+    		return;
+    	}
+    	
+    	// controllo il gene in input
+    	Genes gene = this.cmbGeni.getValue();
+    	if(gene == null) {
+    		this.txtResult.appendText("Errore: devi prima selezionare un gene.\n");
+    		return;
+    	}
+    	
+    	// controllo n
+    	int n = 0;
+    	try {
+    		n = Integer.parseInt(this.txtIng.getText());
+    	}
+    	catch(NumberFormatException e) {
+    		e.printStackTrace();
+    		this.txtResult.setText("Errore: devi inserire un numero intero per n.");
+    		return;
+    	}
+    	
+    	// effettuo la simulazione
+    	List<Studio> ricerca = this.model.simula(n, gene);
+    	
+    	// stampo il risultato
+    	this.txtResult.setText("Risultato della simulazione:\n");
+    	for(Studio s : ricerca) {
+    		this.txtResult.appendText(s.toString() + "\n");
+    	}
+    	
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

@@ -5,10 +5,12 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.genes.model.Genes;
 import it.polito.tdp.genes.model.Model;
+import it.polito.tdp.genes.model.Vicino;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -30,7 +32,7 @@ public class FXMLController {
     private Button btnCreaGrafo; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbGeni"
-    private ComboBox<?> cmbGeni; // Value injected by FXMLLoader
+    private ComboBox<Genes> cmbGeni; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnGeniAdiacenti"
     private Button btnGeniAdiacenti; // Value injected by FXMLLoader
@@ -46,14 +48,46 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	// pulisco l'area di testo
+    	this.txtResult.clear();
     	
-
+    	// creo il grafo
+    	this.model.creaGrafo();
+    	
+    	// stampo il risultato
+    	this.txtResult.setText(String.format("Creato grafo con %d vertici e %d archi\n\n", this.model.nVertici(), 
+    			this.model.nArchi()));
+    	
+    	// riempio il menu a tendina
+    	this.cmbGeni.getItems().clear();
+    	this.cmbGeni.getItems().addAll(this.model.getVertici());
     }
 
     @FXML
     void doGeniAdiacenti(ActionEvent event) {
-
+    	// controllo il grafo
+    	if(!this.model.isGrafoCreato()) {
+    		this.txtResult.setText("Errore: devi prima creare il grafo.");
+    		return;
+    	}
     	
+    	// controllo il gene in input
+    	Genes gene = this.cmbGeni.getValue();
+    	if(gene == null) {
+    		this.txtResult.appendText("Errore: devi prima selezionare un gene.\n");
+    		return;
+    	}
+    	
+    	// trovo la lista di adiacenti
+    	List<Vicino> adiacenti = this.model.getAdiacenti(gene);
+    	
+    	// stampo il risultato
+    	this.txtResult.appendText("Geni adiacenti a: " + gene.toString() + "\n");
+    	for(Vicino v : adiacenti) {
+        	this.txtResult.appendText(v.toString() + "\n");
+    	}
+    	this.txtResult.appendText("\n");
+
     }
 
     @FXML

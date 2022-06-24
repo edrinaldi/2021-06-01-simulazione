@@ -78,6 +78,10 @@ public class Simulator {
 			}
 			
 			// carico la coda
+			if(prossimoGene == null) {
+				this.ricerca.clear();
+				return;
+			}
 			this.queue.add(new Event(e.getTime()+1, prossimoGene));
 			
 			// aggiorno il modello del mondo

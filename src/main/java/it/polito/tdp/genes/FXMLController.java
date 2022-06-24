@@ -84,6 +84,11 @@ public class FXMLController {
     	
     	// stampo il risultato
     	this.txtResult.appendText("Geni adiacenti a: " + gene.toString() + "\n");
+    	if(adiacenti.size() == 0) {
+        	this.txtResult.appendText("NESSUNO");
+        	return;
+
+    	}
     	for(Vicino v : adiacenti) {
         	this.txtResult.appendText(v.toString() + "\n");
     	}
@@ -124,6 +129,10 @@ public class FXMLController {
     	List<Studio> ricerca = this.model.simula(n, gene);
     	
     	// stampo il risultato
+    	if(ricerca.size() == 0) {
+        	this.txtResult.setText("Gene isolato: non è possibile effettuare la simulazione.\n");
+        	return;
+    	}
     	this.txtResult.setText("Risultato della simulazione:\n");
     	for(Studio s : ricerca) {
     		this.txtResult.appendText(s.toString() + "\n");
